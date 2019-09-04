@@ -6,6 +6,7 @@ import java.util.List;
 
 public class NooStateMachine {
     private int state = -1;
+    private Integer returnValue = null;
     private List<NooStateMachine> substates;
 
     public NooStateMachine(FileReader reader) throws IOException {
@@ -34,7 +35,10 @@ public class NooStateMachine {
 
     public NooStateMachine getSubstate(int idx) {
         if (idx > substates.size() - 1) return null;
-
         return substates.get(idx);
+    }
+
+    public int getReturn() {
+        return this.returnValue;
     }
 }

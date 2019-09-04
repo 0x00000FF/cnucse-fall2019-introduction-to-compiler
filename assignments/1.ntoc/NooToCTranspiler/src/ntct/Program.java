@@ -1,14 +1,16 @@
 package ntct;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.file.Files;
-import java.util.List;
 
 public class Program {
+    public static void crash(String message) {
+        System.out.println(message);
+        System.exit(-1);
+    }
+
     public static void main(String[] args) {
         System.out.println("Noo to C Transpiler\n" +
                            "Copyright (c) Kangjun Heo @ Chungnam National University\n" +
@@ -27,9 +29,12 @@ public class Program {
             }
 
             FileReader      reader  = new FileReader(file);
-            NooStateMachine nsm     = new NooStateMachine(reader);
+            NooStateMachine nsm     = new NooStateMachine(reader, false);
 
             String code = NooCodeGenerator.generate(nsm);
+
+
+            reader.close();
 
         } catch (IOException e) {
             System.out.println("[ERROR] IOException thrown, cannot be proceed");

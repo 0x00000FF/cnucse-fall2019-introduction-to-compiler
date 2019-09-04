@@ -11,11 +11,6 @@ public class NooStateMachine {
     private Integer returnValue     = null;
     private List<NooStateMachine> substates;
 
-    private static void crash(String message) {
-        System.out.println(message);
-        System.exit(-1);
-    }
-
     public NooStateMachine(FileReader reader, boolean isSubstate) throws IOException {
         if (isSubstate) state = 0;
 
@@ -32,14 +27,14 @@ public class NooStateMachine {
             }
             else if (read == (int)'"') {
                 if (state < 0 || state > 5) {
-                    crash("[ERROR] Invalid instruction fragment, STOP");
+                    Program.crash("[ERROR] Invalid state transition, STOP");
                 } else {
                     state++;
                 }
             }
             else if (read == (int)'-') {
                 if (returnsNegative) {
-                    crash("[ERROR] Duplicated negate directive, STOP");
+                    Program.crash("[ERROR] Duplicated negate directive, STOP");
                 } else {
                     returnsNegative = true;
                 }

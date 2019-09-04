@@ -3,6 +3,7 @@ package ntct;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 public class NooStateMachine {
     private int state = -1;
@@ -16,7 +17,10 @@ public class NooStateMachine {
             if (read == -1 || read == (int)'\n') break;
             else if (read == (int)'\'' ) {
                 if (state < 0) state = 0;
-                else substates.add(new NooStateMachine(reader));
+                else {
+                    if (substates == null) substates = new Vector<NooStateMachine>();
+                    substates.add(new NooStateMachine(reader));
+                }
             }
             else if (read == (int)'"') {
                 if (state < 0 || state > 5) {
@@ -30,7 +34,7 @@ public class NooStateMachine {
     }
 
     public int getState() {
-        return state;
+        return this.state;
     }
 
     public NooStateMachine getSubstate(int idx) {

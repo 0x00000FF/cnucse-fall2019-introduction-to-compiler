@@ -7,10 +7,18 @@ import java.util.Vector;
 
 public class NooStateMachine {
     private int state = -1;
-    private Integer returnValue = null;
+    private boolean returnsNegative = false;
+    private Integer returnValue     = null;
     private List<NooStateMachine> substates;
 
-    public NooStateMachine(FileReader reader) throws IOException {
+    private static void crash(String message) {
+        System.out.println(message);
+        System.exit(-1);
+    }
+
+    public NooStateMachine(FileReader reader, boolean isSubstate) throws IOException {
+        if (isSubstate) state = 0;
+
         while (true) {
             int read = reader.read();
 
@@ -19,15 +27,21 @@ public class NooStateMachine {
                 if (state < 0) state = 0;
                 else {
                     if (substates == null) substates = new Vector<NooStateMachine>();
-                    substates.add(new NooStateMachine(reader));
+                    substates.add(new NooStateMachine(reader, true));
                 }
             }
             else if (read == (int)'"') {
                 if (state < 0 || state > 5) {
-                    System.out.println("[ERROR] Invalid instruction fragment, STOP");
-                    System.exit(-1);
+                    crash("[ERROR] Invalid instruction fragment, STOP");
                 } else {
                     state++;
+                }
+            }
+            else if (read == (int)'-') {
+                if (returnsNegative) {
+                    crash("[ERROR] Duplicated negate directive, STOP");
+                } else {
+                    returnsNegative = true;
                 }
             }
         }
@@ -43,6 +57,6 @@ public class NooStateMachine {
     }
 
     public int getReturn() {
-        return this.returnValue;
+        return (returnsNegative ? -1 : 1) * this.returnValue;
     }
 }

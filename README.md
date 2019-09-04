@@ -2,7 +2,7 @@
 Introduction to Compiler @ Chungnam National University
 
 ## Assignments
- * Noo source to C transpiler
+ * Noo source to C transpiler (Due: 23:59 September 11, 2019)
  * MiniGo Lexer, Syntax Analyzer with ANTLR
  * Add AST Generation Feature to MiniGo Parser with ANTLR
  * Build translator for MiniGo

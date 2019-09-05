@@ -7,42 +7,67 @@ import java.util.Vector;
 
 public class NooStateMachine {
     private int state = -1;
+
+    private boolean eofEncountered = false;
     private boolean returnsNegative = false;
+    private boolean machineReceivedConstant = false;
+    private StringBuilder constantBuffer = null;
+
     private Integer returnValue     = null;
-    private List<NooStateMachine> substates;
+    private Vector<NooStateMachine> substates;
+
+    private void transState() {
+
+    }
 
     public NooStateMachine(FileReader reader, boolean isSubstate) throws IOException {
-        if (isSubstate) state = 0;
+        if (isSubstate)
+            state = 0;
 
-        while (true) {
-            int read = reader.read();
+        substates = new Vector<NooStateMachine>();
 
-            if (read == -1 || read == (int)'\n') break;
-            else if (read == (int)'\'' ) {
-                if (state < 0) state = 0;
-                else {
-                    if (substates == null) substates = new Vector<NooStateMachine>();
-                    substates.add(new NooStateMachine(reader, true));
-                }
+        char read;
+
+        do
+        {
+            int iRead = reader.read();
+            if (iRead == -1) {
+                eofEncountered = true;
+                break;
             }
-            else if (read == (int)'"') {
-                if (state < 0 || state > 5) {
-                    Program.crash("[ERROR] Invalid state transition, STOP");
+
+            read = (char)iRead;
+
+            if (read == '\'' && state < 0) {
+                state = 0;
+                continue;
+            } else if (read == '\"') {
+                state++;
+            } else {
+                if (Character.isDigit(read)) {
+                    constantBuffer.append(read);
+                } else if (read == '#') {
+                    eofEncountered = true;
+                    break;
                 } else {
-                    state++;
+                    Program.crash("[ERROR] Unallowed instruction fragment, HALT");
                 }
             }
-            else if (read == (int)'-') {
-                if (returnsNegative) {
-                    Program.crash("[ERROR] Duplicated negate directive, STOP");
-                } else {
-                    returnsNegative = true;
-                }
-            }
+        }
+        while (read != '\'');
+
+        if (this.constantBuffer.length() > 0) {
+            returnValue = Integer.parseInt(constantBuffer.toString());
+        } else if (!eofEncountered) {
+            substates.add(new NooStateMachine(reader, true));
         }
     }
 
     public int getState() {
+        if (state == -1) {
+
+        }
+
         return this.state;
     }
 

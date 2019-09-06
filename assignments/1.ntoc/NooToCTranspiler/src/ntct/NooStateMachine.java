@@ -62,13 +62,18 @@ public class NooStateMachine {
             }
         } while (read != '\'');
 
-        System.out.println((isSubstate ? "Sub" : "Master") + " State, Status Result: " + state);
-
         if (this.constantBuffer.length() > 0) {
             returnValue = Integer.parseInt(constantBuffer.toString());
+        } else if (state == 3) {
+            returnValue = 0;
         } else if (!eofEncountered) {
             substates.add(new NooStateMachine(reader, true));
         }
+
+        System.out.println((isSubstate ? "Sub" : "Master") + " Machine, State " + state
+                            + ", Return "
+                            + (returnValue == null ?
+                                (substates.size() > 0 ? "Substate Exists" : "Nothing") : returnValue));
     }
 
     public int getState() {

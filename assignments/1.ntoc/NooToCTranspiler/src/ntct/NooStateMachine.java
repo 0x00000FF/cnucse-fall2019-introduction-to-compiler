@@ -2,6 +2,7 @@ package ntct;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.List;
 import java.util.Vector;
 
@@ -20,27 +21,32 @@ public class NooStateMachine {
 
     }
 
-    public NooStateMachine(FileReader reader, boolean isSubstate) throws IOException {
+    public NooStateMachine(Reader reader, boolean isSubstate) throws IOException {
         if (isSubstate)
             state = 0;
 
         substates = new Vector<NooStateMachine>();
+        constantBuffer = new StringBuilder();
 
         char read;
 
         do
         {
             int iRead = reader.read();
-            if (iRead == -1) {
+            if (iRead == -1 || iRead == (int)'\n') {
                 eofEncountered = true;
                 break;
             }
 
             read = (char)iRead;
 
-            if (read == '\'' && state < 0) {
-                state = 0;
-                continue;
+            if (read == '\'') {
+                if (state < 0) {
+                    state = 0;
+                    read = 0;
+                } else {
+                    break;
+                }
             } else if (read == '\"') {
                 state++;
             } else {
@@ -50,11 +56,13 @@ public class NooStateMachine {
                     eofEncountered = true;
                     break;
                 } else {
+                    System.out.println("READ CHARCODE: " + iRead);
                     Program.crash("[ERROR] Unallowed instruction fragment, HALT");
                 }
             }
-        }
-        while (read != '\'');
+        } while (read != '\'');
+
+        System.out.println((isSubstate ? "Sub" : "Master") + " State, Status Result: " + state);
 
         if (this.constantBuffer.length() > 0) {
             returnValue = Integer.parseInt(constantBuffer.toString());
@@ -64,10 +72,6 @@ public class NooStateMachine {
     }
 
     public int getState() {
-        if (state == -1) {
-
-        }
-
         return this.state;
     }
 

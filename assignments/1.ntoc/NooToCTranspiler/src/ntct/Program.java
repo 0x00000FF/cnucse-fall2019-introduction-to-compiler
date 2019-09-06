@@ -1,9 +1,6 @@
 package ntct;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class Program {
     public static void crash(String message) {
@@ -17,18 +14,26 @@ public class Program {
                            "========================================================");
 
         if (args.length == 0) {
-            System.out.println("USAGE: java -jar ntct.jar <filename>\n");
+            System.out.println("USAGE: java -jar ntct.jar <filename or -stdin>\n");
             System.exit(1);
         }
 
         try {
-            File file = new File(args[1]);
-            if (!file.exists()) {
-                System.out.println("[ERROR] File Not Found, Exit.");
-                System.exit(1);
+            Reader reader;
+
+            if (args[0] == "-stdin") {
+                File file = new File(args[0]);
+
+                if (!file.exists()) {
+                    System.out.println("[ERROR] File Not Found, Exit.");
+                    System.exit(1);
+                }
+
+                reader = new FileReader(file);
+            } else {
+                reader = new InputStreamReader(System.in);
             }
 
-            FileReader      reader  = new FileReader(file);
             NooStateMachine nsm     = new NooStateMachine(reader, false);
 
             String code = NooCodeGenerator.generate(nsm);

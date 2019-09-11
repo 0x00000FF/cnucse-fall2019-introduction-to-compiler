@@ -3,6 +3,9 @@ package ntct;
 import java.io.*;
 
 public class Program {
+    public static int lastRead = -1;
+    public static int returnDepth = 0;
+
     public static void crash(String message) {
         System.out.println(message);
         System.exit(-1);
@@ -22,6 +25,8 @@ public class Program {
             Reader reader;
 
             if (args[0] == "-stdin") {
+                reader = new InputStreamReader(System.in);
+            } else {
                 File file = new File(args[0]);
 
                 if (!file.exists()) {
@@ -30,14 +35,14 @@ public class Program {
                 }
 
                 reader = new FileReader(file);
-            } else {
-                reader = new InputStreamReader(System.in);
             }
 
             NooStateMachine nsm     = new NooStateMachine(reader, false);
+            String code = NooCodeGenerator.initialize(nsm)
+                                          .build()
+                                          .toString();
 
-            String code = NooCodeGenerator.generate(nsm);
-
+            System.out.println(code);
 
             reader.close();
 

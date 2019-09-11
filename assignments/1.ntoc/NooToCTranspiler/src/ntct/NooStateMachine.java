@@ -1,6 +1,5 @@
 package ntct;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
@@ -11,15 +10,10 @@ public class NooStateMachine {
 
     private boolean eofEncountered = false;
     private boolean returnsNegative = false;
-    private boolean machineReceivedConstant = false;
     private StringBuilder constantBuffer = null;
 
     private Integer returnValue     = null;
     private Vector<NooStateMachine> substates;
-
-    private void transState() {
-
-    }
 
     public NooStateMachine(Reader reader, boolean isSubstate) throws IOException {
         if (isSubstate)
@@ -33,8 +27,9 @@ public class NooStateMachine {
         do
         {
             int iRead = reader.read();
+            Program.lastRead = iRead;
+
             if (iRead == -1 || iRead == (int)'\n') {
-                eofEncountered = true;
                 break;
             }
 
@@ -45,7 +40,16 @@ public class NooStateMachine {
                     state = 0;
                     read = 0;
                 } else {
-                    break;
+                    Program.returnDepth++;
+
+                    if (this.state == 3) {
+                        break;
+                    }
+
+                    while (Program.lastRead != -1 && Program.lastRead != 10) {
+                        NooStateMachine substate = new NooStateMachine(reader, true);
+                        substates.add(substate);
+                    }
                 }
             } else if (read == '\"') {
                 state++;
@@ -53,39 +57,33 @@ public class NooStateMachine {
                 if (Character.isDigit(read)) {
                     constantBuffer.append(read);
                 } else if (read == '#') {
-                    eofEncountered = true;
                     break;
                 } else {
-                    System.out.println("READ CHARCODE: " + iRead);
                     Program.crash("[ERROR] Unallowed instruction fragment, HALT");
                 }
             }
-        } while (read != '\'');
+        } while (Program.lastRead != -1 && Program.lastRead != 10);
 
         if (this.constantBuffer.length() > 0) {
-            returnValue = Integer.parseInt(constantBuffer.toString());
-        } else if (state == 3) {
-            returnValue = 0;
-        } else if (!eofEncountered) {
-            substates.add(new NooStateMachine(reader, true));
+            this.returnValue = Integer.parseInt(constantBuffer.toString());
         }
 
         System.out.println((isSubstate ? "Sub" : "Master") + " Machine, State " + state
-                            + ", Return "
+                            + ", Return/Argument "
                             + (returnValue == null ?
-                                (substates.size() > 0 ? "Substate Exists" : "Nothing") : returnValue));
+                                (substates.size() > 0 ?  substates.size() + " Substate(s)" : "Nothing") : returnValue));
     }
 
     public int getState() {
         return this.state;
     }
 
-    public NooStateMachine getSubstate(int idx) {
-        if (idx > substates.size() - 1) return null;
-        return substates.get(idx);
+    public List<NooStateMachine> getSubstates() {
+        return this.substates;
     }
 
-    public int getReturn() {
-        return (returnsNegative ? -1 : 1) * this.returnValue;
+    public Integer getReturn() {
+        if (this.returnValue == null) return -1;
+        else return (returnsNegative ? -1 : 1) * this.returnValue;
     }
 }

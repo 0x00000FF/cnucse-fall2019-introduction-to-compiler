@@ -1,0 +1,10 @@
+
+assignments/2.antlr/lib/antlr-4.7.2-complete.jar
+assignments/2.antlr/src/MiniC.interp
+assignments/2.antlr/src/MiniC.tokens
+assignments/2.antlr/src/MiniCBaseListener.java
+assignments/2.antlr/src/MiniCLexer.interp
+assignments/2.antlr/src/MiniCLexer.java
+assignments/2.antlr/src/MiniCLexer.tokens
+assignments/2.antlr/src/MiniCListener.java
+assignments/2.antlr/src/MiniCParser.java

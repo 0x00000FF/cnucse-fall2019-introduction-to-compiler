@@ -10,3 +10,7 @@ Introduction to Compiler @ Chungnam National University
 ## Project
  * (2018) Enhance Mini Go to U-Code translator in free way
  * (2019) TBA
+
+## No Fucking Java
+![/documents/no-java.png]()
+Fuck Java

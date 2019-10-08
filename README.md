@@ -12,5 +12,5 @@ Introduction to Compiler @ Chungnam National University
  * (2019) TBA
 
 ## No Fucking Java
-![/documents/no-java.png]()
+![documents/no-java.png]()
 Fuck Java

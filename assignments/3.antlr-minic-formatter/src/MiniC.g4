@@ -2,7 +2,7 @@ grammar MiniC;
 
 
 @header { 
-
+    package generated;
 }
 
 program	: decl+			;

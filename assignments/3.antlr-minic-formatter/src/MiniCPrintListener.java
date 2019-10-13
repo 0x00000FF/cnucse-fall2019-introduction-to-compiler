@@ -4,16 +4,17 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
+import generated.*;
 
 public class MiniCPrintListener extends MiniCBaseListener {
-    ParseTreeProperty<?> paramContexts = new ParseTreeProperty<MiniCParser.ParamContext>();
+    ParseTreeProperty<MiniCParser.ParamContext> paramContexts = new ParseTreeProperty<MiniCParser.ParamContext>();
 
     private int indentLevel = 0;
     private final int indentSpaces = 4;
 
     private String createIndent() {
         return new String(
-                new char[] { ' ' },
+                new char[] { '.' },
                 0,
                 indentLevel * indentSpaces
         );
@@ -45,10 +46,7 @@ public class MiniCPrintListener extends MiniCBaseListener {
 
         System.out.printf("%s %s %s", typeSpec, funcName, ptLeft);
 
-        paramContexts.
         // TODO: Parameters should be expressed
-
-        System.out.println(")");
 
         // TODO: Compound Statements should be expressed
     }

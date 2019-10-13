@@ -1,6 +1,6 @@
 // Generated from src/MiniC.g4 by ANTLR 4.7.2
  
-
+    package generated;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;

@@ -1,8 +1,19 @@
-void some_func(int argc, int argv) {
+           int max=500; void main() {
+             int i; int j; int k;
+             int rem; int sum;
 
-}
-
-int main(void) {
-int a = 3;
-a=9;
+             i = 2;
+             while(i <= max) {
+                 sum = 0;
+                 k = i / 2;
+                 j = i;
+                 while ( j <= k) {
+                         rem = i % j;
+                         if (rem == 0) {
+                                sum = sum + j;
+                         ++j;}
+                 }
+                 if  (i == sum) write(i);
+                 ++i;
+             }
 }

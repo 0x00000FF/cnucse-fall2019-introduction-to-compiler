@@ -11,6 +11,6 @@ Introduction to Compiler @ Chungnam National University
  * (2018) Enhance Mini Go to U-Code translator in free way
  * (2019) TBA
 
-## No Fucking Java
+## No Freaking Java
 ![](documents/no-java.png)
-Fuck Java
+Fack Java

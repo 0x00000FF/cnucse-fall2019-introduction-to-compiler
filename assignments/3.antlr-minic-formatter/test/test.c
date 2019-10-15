@@ -1,4 +1,4 @@
-           int max=500; void main() {
+           int max=500; int mac[500]; void main() {
              int i; int j; int k;
              int rem; int sum;
 

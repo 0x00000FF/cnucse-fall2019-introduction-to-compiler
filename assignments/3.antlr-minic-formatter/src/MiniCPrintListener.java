@@ -7,92 +7,116 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import generated.*;
 
 public class MiniCPrintListener extends MiniCBaseListener {
-    ParseTreeProperty<MiniCParser.ParamContext> paramContexts = new ParseTreeProperty<MiniCParser.ParamContext>();
+    ParseTreeProperty<String> subContextStrings = new ParseTreeProperty<String>();
 
+    // Ident Related States
     private int indentLevel = 0;
+
+    // Constant: Default Amount of Indentation
     private final int indentSpaces = 4;
 
+    // Utility Function: Indentation with dot(.)
+    // repeat(int) method of String object can be used
+    // for implementation of indentation, because such
+    // feature requires repeated characters.
     private String createIndent() {
-        return new String(
-                new char[] { '.' },
-                0,
-                indentLevel * indentSpaces
-        );
+        return ".".repeat(indentLevel * indentSpaces);
     }
 
-    @Override
-    public void enterProgram(MiniCParser.ProgramContext ctx) {
+    // Utility Function: Space Concatenation
+    // Each tokens should be concatenated with spaces
+    // to achieve pretty print function,
+    // thus it can be implemented with String.join
+    private String concatWithSpaces(String...strs) {
+        return String.join(" ", strs);
     }
 
-    @Override
-    public void enterVar_decl(MiniCParser.Var_declContext ctx) {
-    }
+    // Global Variable Declaration
+    @Override public void exitVar_decl(MiniCParser.Var_declContext ctx) {
+        String decl = "";
 
-    @Override
-    public void exitExpr(MiniCParser.ExprContext ctx) {
-    }
-
-    @Override
-    public void enterDecl(MiniCParser.DeclContext ctx) {
-
-        super.enterDecl(ctx);
-    }
-
-    @Override
-    public void exitFun_decl(MiniCParser.Fun_declContext ctx) {
-        String typeSpec = ctx.children.get(0).getText();
-        String funcName = ctx.children.get(1).getText();
-        String ptLeft = ctx.children.get(2).getText();
-
-        System.out.printf("%s %s %s", typeSpec, funcName, ptLeft);
-
-        // TODO: Parameters should be expressed
-
-        // TODO: Compound Statements should be expressed
-    }
-
-    @Override
-    public void enterParams(MiniCParser.ParamsContext ctx) {
-
-    }
-
-    @Override
-    public void exitParams(MiniCParser.ParamsContext ctx) {
-        for (var ctxChild : ctx.children) {
-            if (ctxChild instanceof TerminalNodeImpl) {
-                TerminalNodeImpl tnParam = (TerminalNodeImpl)ctxChild;
-                String tnParamText = tnParam.getText();
-
-                if (tnParamText == null) continue;
-
-                System.out.print(tnParamText);
-                if (tnParamText.equals(",")) {
-                    System.out.print(" ");
-                }
-            } else {
-                MiniCParser.ParamContext param = (MiniCParser.ParamContext) ctxChild;
-                String paramTypeSpec = param.getChild(0).getText();
-                String paramName = param.getChild(1).getText();
-
-                System.out.printf("%s %s", paramTypeSpec, paramName);
-            }
+        // Global Variable Declaration has three rules that
+        // are having 3, 5, 6 children
+        // thus...
+        switch (ctx.getChildCount()) {
+            case 3:
+                decl = concatWithSpaces(
+                  ctx.type_spec().getText(),
+                  ctx.IDENT().getText()
+                );
+                break;
+            case 5:
+                decl = concatWithSpaces(
+                        ctx.type_spec().getText(),
+                        ctx.IDENT().getText(),
+                        "=",
+                        ctx.LITERAL().getText()
+                );
+                break;
+            case 6:
+                decl = concatWithSpaces(
+                        ctx.type_spec().getText(),
+                        ctx.IDENT().getText().concat(
+                                "[" + ctx.LITERAL().getText() + "]"
+                        )
+                );
+                break;
+            default:
+                return;
         }
 
-        System.out.println(")");
+        decl += ";";
+        System.out.println(decl);
     }
 
-    @Override
-    public void enterCompound_stmt(MiniCParser.Compound_stmtContext ctx) {
-        System.out.println("{");
+    // Local Variable Declaration
+    // WHY
+    @Override public void exitLocal_decl(MiniCParser.Local_declContext ctx) {
+        String decl = "";
 
-        indentLevel++;
+        // Create Indent Dots
+        // For more information,
+        // Refer private method createIndent()
+        // at MiniCPrintListener.java, Line 19
+        decl += createIndent();
+
+        // Local Variable Declaration has three rules that
+        // are having 3, 5, 6 children
+        // thus...
+        switch (ctx.getChildCount()) {
+            case 3:
+                decl += concatWithSpaces(
+                        ctx.type_spec().getText(),
+                        ctx.IDENT().getText()
+                );
+                break;
+            case 5:
+                decl += concatWithSpaces(
+                        ctx.type_spec().getText(),
+                        ctx.IDENT().getText(),
+                        "=",
+                        ctx.LITERAL().getText()
+                );
+                break;
+            case 6:
+                decl += concatWithSpaces(
+                        ctx.type_spec().getText(),
+                        ctx.IDENT().getText().concat(
+                                "[" + ctx.LITERAL().getText() + "]"
+                        )
+                );
+                break;
+            default:
+                return;
+        }
+
+        decl += ";";
+        System.out.println(decl);
     }
 
-    @Override
-    public void exitCompound_stmt(MiniCParser.Compound_stmtContext ctx) {
-        System.out.println("}\n");
+    // Function Declation
+    @Override public void exitFun_decl(MiniCParser.Fun_declContext ctx) {
 
-        indentLevel--;
+        super.exitFun_decl(ctx);
     }
-
 }

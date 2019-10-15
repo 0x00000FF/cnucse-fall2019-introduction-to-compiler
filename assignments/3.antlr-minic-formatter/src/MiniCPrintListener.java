@@ -7,13 +7,28 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import generated.*;
 
 public class MiniCPrintListener extends MiniCBaseListener {
-    ParseTreeProperty<String> subContextStrings = new ParseTreeProperty<String>();
+    // Code string builder (To Replace Stdout Print)
+    private StringBuilder codeBuilder = new StringBuilder();
+
+    // Context Parse Tree Properties
+    private ParseTreeProperty<String> subContextStrings = new ParseTreeProperty<String>();
 
     // Ident Related States
     private int indentLevel = 0;
 
     // Constant: Default Amount of Indentation
     private final int indentSpaces = 4;
+
+    // Utility Function: Builds complete code form
+    private String build() {
+        return (codeBuilder == null) ? null : codeBuilder.toString();
+    }
+
+    // Utility Function: Emit formatted code to codeBuilder
+    // Replaces codeBuilder.append
+    private void emit(String str) {
+        codeBuilder.append(str + "\n");
+    }
 
     // Utility Function: Indentation with dot(.)
     // repeat(int) method of String object can be used
@@ -66,7 +81,7 @@ public class MiniCPrintListener extends MiniCBaseListener {
         }
 
         decl += ";";
-        System.out.println(decl);
+        emit(decl);
     }
 
     // Local Variable Declaration
@@ -111,7 +126,7 @@ public class MiniCPrintListener extends MiniCBaseListener {
         }
 
         decl += ";";
-        System.out.println(decl);
+        emit(decl);
     }
 
     // Function Declation

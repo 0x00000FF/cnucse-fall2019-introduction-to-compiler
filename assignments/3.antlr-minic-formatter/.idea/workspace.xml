@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="72ad2acd-ec8a-4a84-a83c-e8d7aeb33ff6" name="Default Changelist" comment="" />
+    <list default="true" id="72ad2acd-ec8a-4a84-a83c-e8d7aeb33ff6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MiniCPrintListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MiniCPrintListener.java" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +49,6 @@
       <module name="3.antlr-minic-formatter" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
       <method v="2">
-        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_ANTLR Build" />
         <option name="Make" enabled="true" />
       </method>
     </configuration>
@@ -65,6 +67,7 @@
       <workItem from="1570537566328" duration="14955000" />
       <workItem from="1570970163279" duration="3702000" />
       <workItem from="1571128490443" duration="3662000" />
+      <workItem from="1571138175705" duration="2375000" />
     </task>
     <servers />
   </component>

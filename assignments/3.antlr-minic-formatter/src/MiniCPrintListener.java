@@ -25,14 +25,14 @@ import generated.*;
 import java.util.Vector;            // Vector<E>
 import org.antlr.v4.runtime.tree.*; // For ParseTree, ParseTreeProperty
 
-
 public class MiniCPrintListener extends MiniCBaseListener {
     // Code string builder (To Replace Stdout Print)
     private StringBuilder codeBuilder = new StringBuilder();
 
     // ParseTreeProperty objects
     ParseTreeProperty<String> params = new ParseTreeProperty<String>();
-    ParseTreeProperty<String> compountStmt = new ParseTreeProperty<String>();
+    ParseTreeProperty<String> compoundStmt = new ParseTreeProperty<String>();
+    ParseTreeProperty<String> subCompoundStmt = new ParseTreeProperty<String>();
 
     // Indent Related States
     private int indentLevel = 0;
@@ -41,7 +41,7 @@ public class MiniCPrintListener extends MiniCBaseListener {
     private final int indentSpaces = 4;
 
     // Utility Function: Builds complete code form
-    private String build() {
+    public String build() {
         return (codeBuilder == null) ? null : codeBuilder.toString();
     }
 
@@ -118,9 +118,8 @@ public class MiniCPrintListener extends MiniCBaseListener {
         emit(decl);
     }
 
-    // Local Variable Declaration
-    // WHY
-    @Override public void exitLocal_decl(MiniCParser.Local_declContext ctx) {
+    // Local declaration
+    public void exitLocal_decl(MiniCParser.Local_declContext ctx) {
         String decl = "";
 
         // Create Indent Dots
@@ -155,20 +154,54 @@ public class MiniCPrintListener extends MiniCBaseListener {
                         )
                 );
                 break;
-
-            // This condition is not necessary to consider
-            // But need to be handled
-            default:
-                return;
         }
 
-        decl += ";";
-        emit(decl);
+        subCompoundStmt.put(ctx, decl + ";");
+    }
+
+    // While Statement
+    @Override public void exitWhile_stmt(MiniCParser.While_stmtContext ctx) {
+        String whileStmtStart = concatWithSpaces(
+                ctx.WHILE().getText(),
+                "(" + ctx.expr().getText() + ")"
+        );
+
+        subCompoundStmt.put(ctx, whileStmtStart);
+    }
+
+    // Expression
+    @Override public void exitExpr(MiniCParser.ExprContext ctx) {
+
+    }
+
+    // Compound Statements Declaration (Enter)
+    @Override public void enterCompound_stmt(MiniCParser.Compound_stmtContext ctx) {
+        compoundStmt = new ParseTreeProperty<String>();
     }
 
     // Compound Statements Declaration
     @Override public void exitCompound_stmt(MiniCParser.Compound_stmtContext ctx) {
+        if (ctx.children == null) return;
 
+        for (ParseTree pt : ctx.children) {
+            // Low indent level before escaping compound statement
+            if (pt.getText().equals("}")) {
+                indentLevel--;
+            }
+
+            // Get Sub Compound Statements
+            String subStatements = subCompoundStmt.get(pt);
+            if (subStatements == null)
+                subStatements = pt.getText();
+
+            // Add Statement with Indentation
+            compoundStmt.put(pt, createIndent() + subStatements);
+
+            // Up indent level before entering compound statement
+            if (pt.getText().equals("{")) {
+                indentLevel++;
+            }
+        }
     }
 
     // Creates new ParseTreeProperty object
@@ -178,9 +211,20 @@ public class MiniCPrintListener extends MiniCBaseListener {
 
         if (ctx.children == null) return;
 
-        for (MiniCParser.ParamContext pt : ctx.children) {
+        for (ParseTree pt : ctx.children) {
+            // Ignore comma (will concatenated)
+            if (pt.getText().equals(",")) continue;
 
-            params.put(pt);
+            // Create initial parameter declaration
+            // type_spec INDENT
+            String paramStr = pt.getChild(0).getText() + " " +
+                              pt.getChild(1).getText();
+
+            // Add array type brackets if parameter is array type
+            if (pt.getChildCount() == 4)
+                paramStr += "[]";
+
+            params.put(pt, paramStr);
         }
     }
 
@@ -200,21 +244,26 @@ public class MiniCPrintListener extends MiniCBaseListener {
         // Getting from ParseTreeProperty<String> params
         MiniCParser.ParamsContext psctx = ctx.params();
         if (psctx.children != null) {
-            String[] l_Params = new String[psctx.children.size()];
-            for (int i = 0; i < l_Params.length; ++i) {
-                l_Params[i] = params.get(psctx.children.get(i));
+            Vector<String> l_Params = new Vector<String>();
+            for (ParseTree param : psctx.children) {
+                if (param.getText().equals(",")) continue;
+                l_Params.add(params.get(param));
             }
-            funcBody += concatWithCommaSpaces(l_Params);
+            funcBody += concatWithCommaSpaces(l_Params.toArray(new String[0]));
         }
 
         // And closes parameter parenthesis
         // Also add line feed in order to place brace
         // on next line
-        funcBody += ")";
+        funcBody += ")\n";
 
         // Begin Compound Statements...
+        MiniCParser.Compound_stmtContext compounds = ctx.compound_stmt();
+        for (ParseTree compound : compounds.children) {
+            funcBody += compoundStmt.get(compound).concat("\n");
+        }
 
-        System.out.println(funcBody);
+        emit(funcBody);
         super.exitFun_decl(ctx);
     }
 }

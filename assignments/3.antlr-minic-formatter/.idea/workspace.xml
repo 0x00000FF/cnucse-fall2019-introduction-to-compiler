@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="72ad2acd-ec8a-4a84-a83c-e8d7aeb33ff6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MiniCPrintListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MiniCPrintListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Translator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Translator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test.c" beforeDir="false" afterPath="$PROJECT_DIR$/test/test.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -90,6 +91,7 @@
     <watches-manager>
       <configuration name="Application">
         <watch expression="ctx.children.get(0).getText()" language="JAVA" />
+        <watch expression="pt.getText();" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

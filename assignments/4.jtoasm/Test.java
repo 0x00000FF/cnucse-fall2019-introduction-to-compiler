@@ -15,9 +15,7 @@
  *      referred Java Virtual Machine Instruction Architecture Manual
  *      https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html
  *  Addendum      :
- *      Some of ILs cannot be directly decompiled due to modifier problem
- *      If you want an optimized version of this code, please see Test.o.java
- *      Also there's a lot of comments like here, enjoy! :D
+ *      none
  */
 
  // .class public Test

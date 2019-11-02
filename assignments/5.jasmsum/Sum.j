@@ -27,7 +27,7 @@
 ; this method takes a integer typed value, 
 ; returns a integer typed sum of 1 to n.
 ;
-.method public sum(I)I
+.method public static sum(I)I
 
 .end method
 

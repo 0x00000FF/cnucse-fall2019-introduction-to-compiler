@@ -28,7 +28,19 @@
 ; returns a integer typed sum of 1 to n.
 ;
 .method public static sum(I)I
+    ; int a = 0
+    ldc 0
+    istore_0
+    
+    ; int sum = 0
+    istore_1
 
+    ; int i = 1
+    ldc 1
+    istore_2
+
+    ; Loop start 
+    
 .end method
 
 ;
@@ -40,6 +52,19 @@
 ; this method is an entry point of Sum Java Program.
 ;
 .method public static main([Ljava/lang/String;)V
+    ; limit maximum count of stack items and local variables
+    .limit stack 2
+    .limit locals 8
 
+    ; get System.out static PrintStream object
+    getstatic java/lang/System/out Ljava/io/PrintStream
+
+    ; call sum(100)
+    ldc 100
+    invokestatic Sum/sum(I)I
+
+    ; call System.out.println(/* return value of sum(100) */)
+    invokevirtual java/io/PrintStream/println(I)V
+
+    return
 .end method
-

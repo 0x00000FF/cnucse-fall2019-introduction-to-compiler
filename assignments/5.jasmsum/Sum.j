@@ -7,14 +7,14 @@
 ; The program calls a function sum(int) and prints its return value.
 
 .class public Sum
-.super java/lang/Object ; Every class inherits java.lang.Object
+.super java/lang/Object
 
 ; 
 ; class object initializer 
 ;
 .method public <init>()V
     aload_0
-    invokevirtual java/lang/Object/<init>()V
+    invokespecial java/lang/Object/<init>()V
     return
 .end method
 
@@ -28,36 +28,56 @@
 ; returns a integer typed sum of 1 to n.
 ;
 .method public static sum(I)I
-    ; int a = 0
-    ldc 0
-    istore_0
-    
+    .limit stack 8
+    .limit locals 16
+
     ; int sum = 0
-    istore_1
+    ldc 0
+    istore 1
 
     ; int i = 1
     ldc 1
-    istore_2
+    istore 2
 
     ; Loop start 
+Sum_Loop:
+    ; sum = sum + i;    
+    iload 1
+    iload 2
+    iadd
+    istore 1
     
+    ; i - arg0
+    iload 2
+    iload 0
+    isub
+
+    ; ++i
+    iinc 2 1
+
+    ; test i == arg0 (from ln 51~53, check if not zero)
+    ifne Sum_Loop
+
+    ; Return 
+    iload 1
+    ireturn
 .end method
 
 ;
 ; method main(String[])
 ;
 ; returns nothing 
-; paramter args : String[]
+; parameter args : String[]
 ;
 ; this method is an entry point of Sum Java Program.
 ;
 .method public static main([Ljava/lang/String;)V
     ; limit maximum count of stack items and local variables
-    .limit stack 2
-    .limit locals 8
+    .limit stack 8
+    .limit locals 16
 
     ; get System.out static PrintStream object
-    getstatic java/lang/System/out Ljava/io/PrintStream
+    getstatic java/lang/System/out Ljava/io/PrintStream;
 
     ; call sum(100)
     ldc 100

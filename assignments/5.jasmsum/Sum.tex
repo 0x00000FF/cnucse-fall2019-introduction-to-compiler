@@ -1,0 +1,96 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{float}
+\usepackage{listings}
+\usepackage[total={18cm, 20cm}]{geometry}
+\usepackage{graphicx}
+
+\title{Writing a Loop-Sum Program for Jasmin Assembler}
+\date{November 6, 2019}
+\author{201704150 Kangjun Heo}
+
+\lstset{basicstyle=\footnotesize\ttfamily}
+
+\begin{document}
+    \maketitle
+
+    \begin{abstract}
+        Jasmin assembler is an assembler for Java Virtual Machine(JVM). I implemented a program for JVM that prints sum of 1 to 100, with the assembler and its language.
+    \end{abstract}
+
+    \section{Introduction}
+    Jasmin assembler is an assembler for Java Virtual Machine, provides several mnemonics for understandings of JVM bytecode. It is not only enables human to write JVM program directly without any high-level languages, but also offers actual comprehensions of the program(being called \textit{Summer} from now). For this assignment, I wrote a designated program which gets no input but prints sum of 1 to 100.
+
+    \section{Implementation}
+    The entry point \textit{Summer} is \texttt{Sum.main(String[])}, which calls \texttt{Sum.sum(int)} returns \texttt{int}.
+
+        \subsection{Class Definition}
+        Every java program has classes, so I declared a class that named \texttt{Sum} for \textit{Summer}.
+        \begin{figure}[H]
+            \begin{lstlisting}[gobble=8]
+            .class public Sum
+            .super java/lang/Object
+            \end{lstlisting}
+    
+            \centering        
+            \caption{Declaration of class \texttt{Sum}}
+        \end{figure}
+        Since every objects (except primitive data) in JVM is derived from \texttt{java.lang.Object}, So I put an explicit super class information.  
+
+        \subsection{Methods}
+        \begin{figure}[H]
+            \begin{lstlisting}[gobble=8]
+            public static int  sum(int)
+            public static void main(String[] args)
+            \end{lstlisting}
+    
+            \centering        
+            \caption{Methods intended to implement}
+        \end{figure}
+
+        \begin{figure}[H]
+            \begin{lstlisting}[gobble=8]
+            .method public static sum(I)I
+            .method public static main([Ljava/lang/String;)V
+            \end{lstlisting}
+    
+            \centering        
+            \caption{Methods actually implemented}
+        \end{figure}
+
+        \subsection{Loop Implementation}
+        \begin{figure}[H]
+            \begin{lstlisting}[gobble=8]
+            
+            \end{lstlisting}
+    
+            \centering        
+            \caption{Loop implementation for result of sum}
+        \end{figure}
+        
+        \subsection{Errors}
+        I suffered with several unknown errors which prevents successful testing during the implementation, for example, \texttt{java.lang.ClassFormatError} and \texttt{java.lang.VerifyError}. I had to fix it without any assistance of debugger or analyzer, thus I need to google and ask some help to Prof. Cho. 
+    
+            \subsubsection{\texttt{ClassFormatError}}
+            \texttt{ClassFormatError} is an error that is thrown when the Java Virtual Machine attempts to read a class file and determines that the file is malformed or otherwise cannot be interpreted as a class file.
+    
+            \subsubsection{\texttt{VerifyError}}
+            \texttt{VerifyError} is an another error I encountered, after resolving \texttt{ClassFormatError}.
+    \section{Testing}
+    The program should be verified that it ensures accurate output for random inputs. So I modified the program to make it get inputs from command arguments and tested with this testing code:
+    \begin{figure}[H]
+        \begin{lstlisting}
+        .method public static main([Ljava/lang/String;)V
+            
+        .end method
+        \end{lstlisting}
+
+        \centering        
+        \caption{Modified code for args}
+    \end{figure}
+
+    \section{Conclusion}
+
+
+    \bibliographystyle{plain}
+    \bibliography{website:oracle_cfe, website:oracle_ve}
+\end{document}

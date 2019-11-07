@@ -19,7 +19,7 @@
     \end{abstract}
 
     \section{Introduction}
-    Jasmin assembler is an assembler for Java Virtual Machine, provides several mnemonics for understandings of JVM bytecode. It is not only enables human to write JVM program directly without any high-level languages, but also offers actual comprehensions of the program(being called \textit{Summer} from now). For this assignment, I wrote a designated program which gets no input but prints sum of 1 to 100.
+    Jasmin assembler is an assembler for Java Virtual Machine, provides several mnemonics for understandings of JVM bytecode.\cite{oracle_isa} It is not only enables human to write JVM program directly without any high-level languages, but also offers actual comprehensions of the program(being called \textit{Summer} from now). For this assignment, I wrote a designated program which gets no input but prints sum of 1 to 100.
 
     \section{Implementation}
     The entry point \textit{Summer} is \texttt{Sum.main(String[])}, which calls \texttt{Sum.sum(int)} returns \texttt{int}.
@@ -114,7 +114,7 @@
         I suffered with several unknown errors which prevents successful testing during the implementation, for example, \texttt{java.lang.ClassFormatError} and \texttt{java.lang.VerifyError}. I had to fix it without any assistance of debugger or analyzer, thus I need to google and ask some help to Prof. Cho. 
     
             \subsubsection{\texttt{ClassFormatError}}
-            \texttt{ClassFormatError} is an error that is thrown when the Java Virtual Machine attempts to read a class file and determines that the file is malformed or otherwise cannot be interpreted as a class file. \cite{website:oracle_cfe} It is the issue that I encountered for the first time, Actual output of error message was:
+            \texttt{ClassFormatError} is an error that is thrown when the Java Virtual Machine attempts to read a class file and determines that the file is malformed or otherwise cannot be interpreted as a class file. \cite{oracle_cfe} It is the issue that I encountered for the first time, Actual output of error message was:
             
             \begin{figure}[H]
                 \begin{lstlisting}[gobble=20]
@@ -138,9 +138,11 @@
                 \centering        
                 \caption{Error message on first test execution}
             \end{figure}
+
+            I checked the body of method \texttt{main} and figured out that semicolon is omitted in \texttt{getstatic} instruction, after \texttt{PrintStream}.
     
             \subsubsection{\texttt{VerifyError}}
-            \texttt{VerifyError} is an another error I encountered, after resolving \texttt{ClassFormatError}.
+            \texttt{VerifyError} is an another error I encountered, after resolving \texttt{ClassFormatError}. This error is thrown when the "verifier" detects that a class file, though well formed, contains some sort of internal inconsistency or security problem. \cite{oracle_ve}
     
             \begin{figure}[H]
                 \begin{lstlisting}[gobble=20]
@@ -158,18 +160,37 @@
                 \centering        
                 \caption{Error message after \texttt{ClassFormatError} is resolved}
             \end{figure}
+
+            According to Prof. Cho's Advice, each methods that have local variable or function calls in their body must limit the count of stack and local entries. I didn't give such directives to method \texttt{sum(I)I}, and after fix it, the error no longer occured, executed successfully.
     \section{Testing}
-    The program should be verified that it ensures accurate output for random inputs. So I modified the program to make it get inputs from command arguments and tested with this testing code:
+    The program should be verified that it ensures accurate output for random inputs. So I modified the program to make it get inputs from command arguments.
     \begin{figure}[H]
         \begin{lstlisting}
-        .method public static main([Ljava/lang/String;)V
-            
-        .end method
+        
         \end{lstlisting}
 
         \centering        
         \caption{Modified code for args}
     \end{figure}
+
+    \begin{figure}[H]
+        \begin{lstlisting}
+        
+        \end{lstlisting}
+
+        \centering        
+        \caption{Testing code written for PowerShell}
+    \end{figure}
+
+    \begin{figure}[H]
+        \begin{lstlisting}
+        
+        \end{lstlisting}
+
+        \centering        
+        \caption{Actual Testing Result}
+    \end{figure}
+
 
     \section{Conclusion}
     In machine level, there are no \texttt{for} or \texttt{while} keywords exist in instruction set architecture, but conditional jumping instruction does the role instead. Also, if there are any local variable or function call, \texttt{.limit} directives are required to create enough space for such data.
@@ -271,4 +292,6 @@
         .end method
     \end{lstlisting}
 
+    \bibliographystyle{plain}
+    \bibliography{oracle_isa, oracle_cfe, oracle_ve}
 \end{document}

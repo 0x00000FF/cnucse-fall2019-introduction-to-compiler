@@ -122,7 +122,16 @@ public class BytecodeGenListener extends MiniCBaseListener implements ParseTreeL
                 stmt += newTexts.get(ctx.expr_stmt());
             else if(ctx.compound_stmt() != null)	// compound_stmt
                 stmt += newTexts.get(ctx.compound_stmt());
+            
             // <(0) Fill here>
+            else if (ctx.if_stmt() != null) // if_stmt
+                stmt += newTexts.get(ctx.if_stmt());
+            else if (ctx.while_stmt() != null) // while_stmt
+                stmt += newTexts.get(ctx.while_stmt());
+            else if (ctx.return_stmt() != null)// return_stmt
+                stmt += newTexts.get(ctx.return_stmt());
+            else
+                throw new IllegalArgumentException(); // ERROR!
         }
         newTexts.put(ctx, stmt);
     }

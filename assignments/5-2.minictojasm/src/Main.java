@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import listener.main.BytecodeGenListener;
+
 public class Main {
     // Remove unnecessary System.out (.NET Style)
     static PrintStream Console = System.out;

@@ -56,6 +56,8 @@ public class SymbolTable {
     }
 
     void initFunDecl(){		// at each func decl
+        _lsymtable.clear();
+
         _localVarID = 0;
         _labelID = 0;
         _tempVarID = 32;
